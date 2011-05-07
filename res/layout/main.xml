@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <TableLayout android:layout_alignParentLeft="true" android:id="@+id/tableLayout1" android:layout_height="wrap_content" android:layout_width="fill_parent">
+        <TableRow android:fitsSystemWindows="true" android:layout_height="wrap_content" android:id="@+id/tableRow1" android:layout_width="fill_parent">
+            <ImageButton android:id="@+id/imageButton1" android:background="@drawable/afata" android:layout_width="105dp" android:layout_height="105dp" android:src="@drawable/icon7"></ImageButton>
+            <ImageButton android:id="@+id/imageButton2" android:background="@drawable/blurcherry" android:layout_height="105dp" android:layout_width="105dp" android:src="@drawable/icon8"></ImageButton>
+            <ImageButton android:id="@+id/imageButton3" android:background="@drawable/purplerose" android:layout_width="105dp" android:layout_height="105dp" android:src="@drawable/icon9"></ImageButton>
+        </TableRow>
+        <TableRow android:id="@+id/tableRow2" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <ImageButton android:id="@+id/imageButton4" android:layout_width="105dp" android:layout_height="105dp" android:background="@drawable/burl" android:src="@drawable/icon4"></ImageButton>
+            <ImageButton android:id="@+id/imageButton5" android:layout_width="105dp" android:layout_height="105dp" android:background="@drawable/darkcherry" android:src="@drawable/icon5"></ImageButton>
+            <ImageButton android:id="@+id/imageButton6" android:layout_width="105dp" android:layout_height="105dp" android:background="@drawable/macadamia" android:src="@drawable/icon6"></ImageButton>
+        </TableRow>
+        <TableRow android:id="@+id/tableRow3" android:layout_width="wrap_content" android:layout_height="wrap_content">
+            <ImageButton android:id="@+id/imageButton7" android:src="@drawable/icon" android:background="@drawable/yellow" android:layout_width="105dp" android:layout_height="105dp"></ImageButton>
+            <ImageButton android:id="@+id/imageButton8" android:layout_width="105dp" android:layout_height="105dp" android:background="@drawable/vintagecherry" android:src="@drawable/icon2"></ImageButton>
+            <ImageButton android:id="@+id/imageButton9" android:layout_width="105dp" android:background="@drawable/seagrass" android:layout_height="104dp" android:src="@drawable/icon3"></ImageButton>
+        </TableRow>
+        <TableRow android:id="@+id/tableRow4" android:layout_width="wrap_content" android:layout_height="wrap_content">
+        </TableRow>
+    </TableLayout>
+    <TextView android:id="@+id/textView1" android:layout_below="@+id/tableLayout1" android:layout_width="fill_parent" android:text="@string/app_name" android:layout_height="60dp" android:gravity="center" android:textSize="30dp"></TextView>
+</RelativeLayout>
