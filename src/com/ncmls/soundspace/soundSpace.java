@@ -46,10 +46,12 @@ public class soundSpace extends Activity {
 
         @Override
         public void onStart() {
-                super.onStart();
+                super.onStart(); 
+        }
 
-
-           
+        @Override
+        public void onRestart() {
+                super.onRestart(); 
         }
         
         @Override
