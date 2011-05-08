@@ -16,7 +16,7 @@
             <ImageButton android:id="@+id/imageButton6" android:layout_width="105dp" android:layout_height="105dp" android:background="@drawable/macadamia" android:src="@drawable/icon6"></ImageButton>
         </TableRow>
         <TableRow android:id="@+id/tableRow3" android:layout_width="wrap_content" android:layout_height="wrap_content">
-            <ImageButton android:id="@+id/imageButton7" android:src="@drawable/icon" android:background="@drawable/yellow" android:layout_width="105dp" android:layout_height="105dp"></ImageButton>
+            <ImageButton android:id="@+id/imageButton7" android:src="@drawable/icon1" android:background="@drawable/yellow" android:layout_width="105dp" android:layout_height="105dp"></ImageButton>
             <ImageButton android:id="@+id/imageButton8" android:layout_width="105dp" android:layout_height="105dp" android:background="@drawable/vintagecherry" android:src="@drawable/icon2"></ImageButton>
             <ImageButton android:id="@+id/imageButton9" android:layout_width="105dp" android:background="@drawable/seagrass" android:layout_height="104dp" android:src="@drawable/icon3"></ImageButton>
         </TableRow>

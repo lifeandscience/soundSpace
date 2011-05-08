@@ -2,4 +2,6 @@
 <resources>
     <string name="hello">Hello World, soundSpace!</string>
     <string name="app_name">soundSpace</string>
+    <string name="help">Help You?</string>
+    <string name="clear">Clearing History</string>
 </resources>
