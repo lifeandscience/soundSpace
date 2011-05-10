@@ -2,6 +2,7 @@ package org.ncmls.soundspace;
 
 import java.net.ConnectException;
 
+import android.R.bool;
 import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -23,12 +24,36 @@ import org.ncmls.soundspace.AccelerometerManager;
 import org.ncmls.soundspace.R;
 
 import android.os.Debug;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 @SuppressWarnings("unused")
 
 public class soundSpace extends Activity 
-implements OnTouchListener, AccelerometerListener {
+implements Runnable, OnTouchListener, AccelerometerListener {
+
+	public class timmer implements Runnable {
+		private boolean _running = true;
+		private Handler _handler;
+		private Runnable _runnable;
+
+		public timmer(Runnable runnable, Handler handler) {
+			_runnable = runnable;
+			_handler = handler;
+		}
+		public void setRunning(boolean running) {_running = running;}
+
+		public void run() {
+			while(_running) {
+				try { Thread.sleep(1000); } catch(InterruptedException ex) {}
+				if( _running ) _handler.post( _runnable );
+			}
+		}
+	}
+	timmer tim;
+	Thread th;
+	Handler handler = new Handler();
+	int timmerDecay = 0;
 	
 	   private static final String TAG = "soundSpace";
 	   private static Context CONTEXT;
@@ -82,6 +107,9 @@ implements OnTouchListener, AccelerometerListener {
         try {
   		osccon.connect("10.0.0.109:7000");
         } catch (ConnectException e) {	e.printStackTrace();	}
+
+    	tim = new timmer(this, handler);
+    	(th = new Thread(tim)).start();
         Log.i(TAG, "end of onCreate");
         } // END of onCreate()
              
@@ -92,14 +120,10 @@ implements OnTouchListener, AccelerometerListener {
 
             switch (event.getAction() & 0xFF) {
             case MotionEvent.ACTION_DOWN:
-
-               lastSquare = (int)event.getX();
-               pos = new String("("+lastSquare+","+") ");
-               osccon.send("/activity", lastSquare, 3);
                
                break;
             case MotionEvent.ACTION_UP:
-               osccon.send("/activity", lastSquare, 0);
+
                break;
                
             case MotionEvent.ACTION_MOVE:
@@ -147,7 +171,7 @@ implements OnTouchListener, AccelerometerListener {
     		mx =x; my = y; mz =z;	
     	}
     	public void onShake(float force) {
-   		 if (force > 2.0)
+   		 if (force > 0.9)
    			 {
    			 	openOptionsMenu();
    			 }
@@ -166,31 +190,52 @@ implements OnTouchListener, AccelerometerListener {
     				return i;
     			}
 			return 0;
-    	}
+    	} // End of buttonNumber()
     	
     	public void onTap(ImageButton b)
     	{
     		int newSquare = buttonNumber(b);
     		int oldSquare = buttonNumber(lastButton);
+    		b.setSelected(true);
     		if (newSquare == oldSquare)
     		{
     			if (activityLevel < 3) activityLevel++;
+    			else 
+    				{
+    				activityLevel = 0;
+    	    		b.setSelected(false);
+    				}
                 osccon.send("/activity", oldSquare, activityLevel);
     		}
     		else
     		{
-    			if(lastButton != null)
-    			{
-    				lastButton.setSelected(false);
-    				lastButton.setAlpha(255);
-                    osccon.send("/activity", oldSquare, 0);
-    			}
                 activityLevel = 1;
                 osccon.send("/activity", newSquare, activityLevel);
     		}
-    		b.setSelected(true);
-    		b.setAlpha(80*activityLevel);
-    		lastButton = b;
-    	}
 
+    		if (activityLevel == 0)
+    			{
+    			b.setAlpha(255);
+    			}
+    		else b.setAlpha(80*activityLevel);
+    		lastButton = b;
+    		timmerDecay = 2;
+    	}  // End of onTap()
+    	static int nexttime = 0;
+    	public void run() {
+    		if (timmerDecay < 0) timmerDecay = 0;
+    		if (timmerDecay > 0) timmerDecay--;
+    		if (nexttime == 1)
+    		{
+    		 for (int i=1; i<10; i++)
+    		 {
+    			ImageButton b = (ImageButton) findViewById(buttonIds[i]);
+    			b.setSelected(false);
+    			b.setAlpha(255);
+                osccon.send("/activity", i, 0);
+    		 }
+    		 nexttime = 0;
+    		}
+    		if (timmerDecay == 0) nexttime = 1;
+    	} // End of run()
 }
