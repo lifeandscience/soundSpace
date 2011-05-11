@@ -45,7 +45,7 @@ implements Runnable, OnTouchListener, AccelerometerListener {
 
 		public void run() {
 			while(_running) {
-				try { Thread.sleep(1000); } catch(InterruptedException ex) {}
+				try { Thread.sleep(300); } catch(InterruptedException ex) {}
 				if( _running ) _handler.post( _runnable );
 			}
 		}
@@ -74,7 +74,7 @@ implements Runnable, OnTouchListener, AccelerometerListener {
 		   R.id.imageButton8,
 		   R.id.imageButton9
 		   };
-	   
+	   private static int level[] = { 0,0,0,0,0,0,0,0,0,0 };
 	   private static final int LISTENING = 1;
 	   private static final int TALKING   = 2;
 	   private static int mode = TALKING;
@@ -199,43 +199,56 @@ implements Runnable, OnTouchListener, AccelerometerListener {
     		b.setSelected(true);
     		if (newSquare == oldSquare)
     		{
-    			if (activityLevel < 3) activityLevel++;
+    			if (level[oldSquare] < 3) level[oldSquare]++;
     			else 
     				{
-    				activityLevel = 0;
+    				level[oldSquare] = 0;
     	    		b.setSelected(false);
     				}
-                osccon.send("/activity", oldSquare, activityLevel);
+                osccon.send("/activity", oldSquare, level[oldSquare]);
     		}
     		else
     		{
-                activityLevel = 1;
-                osccon.send("/activity", newSquare, activityLevel);
+                level[newSquare] = 1;
+                osccon.send("/activity", newSquare, level[newSquare]);
     		}
 
-    		if (activityLevel == 0)
+    		if (level[newSquare] == 0)
     			{
     			b.setAlpha(255);
     			}
-    		else b.setAlpha(80*activityLevel);
+    		else b.setAlpha(80*level[newSquare]);
     		lastButton = b;
-    		timmerDecay = 2;
+    		timmerDecay = 4;
     	}  // End of onTap()
+    	
+    	
     	static int nexttime = 0;
     	public void run() {
     		if (timmerDecay < 0) timmerDecay = 0;
     		if (timmerDecay > 0) timmerDecay--;
     		if (nexttime == 1)
     		{
+    	     int doneDecay = 1;
     		 for (int i=1; i<10; i++)
     		 {
     			ImageButton b = (ImageButton) findViewById(buttonIds[i]);
-    			b.setSelected(false);
+
     			b.setAlpha(255);
                 osccon.send("/activity", i, 0);
+                if (level[i] > 0) { level[i]--; doneDecay = 0; }
+                osccon.send("/activity", i, level[i]);
+    			if (level[i] == 0) 
+    				{
+    					b.setSelected(false);
+    					b.setAlpha(255);
+    				}
+    			else
+    					b.setAlpha(80*level[i]);
     		 }
-    		 nexttime = 0;
+    		 if (doneDecay == 1) nexttime = 0;
+    		} else {
+    		 if (timmerDecay == 0) nexttime = 1;
     		}
-    		if (timmerDecay == 0) nexttime = 1;
     	} // End of run()
 }
