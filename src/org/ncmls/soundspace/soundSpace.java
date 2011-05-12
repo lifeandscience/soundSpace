@@ -32,6 +32,11 @@ import android.util.Log;
 public class soundSpace extends Activity 
 implements Runnable, OnTouchListener, AccelerometerListener {
 
+	   private static final String TAG      = "soundSpace";
+	   private static final int DELAYTIME   = 6;
+	   private static final int RESPONSE_MS = 700;
+	   
+	   
 	public class timmer implements Runnable {
 		private boolean _running = true;
 		private Handler _handler;
@@ -45,7 +50,7 @@ implements Runnable, OnTouchListener, AccelerometerListener {
 
 		public void run() {
 			while(_running) {
-				try { Thread.sleep(300); } catch(InterruptedException ex) {}
+				try { Thread.sleep(RESPONSE_MS); } catch(InterruptedException ex) {}
 				if( _running ) _handler.post( _runnable );
 			}
 		}
@@ -55,7 +60,7 @@ implements Runnable, OnTouchListener, AccelerometerListener {
 	Handler handler = new Handler();
 	int timmerDecay = 0;
 	
-	   private static final String TAG = "soundSpace";
+
 	   private static Context CONTEXT;
 	   static int lastSquare = 1;
 	   static int activityLevel = 0;
@@ -83,7 +88,7 @@ implements Runnable, OnTouchListener, AccelerometerListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //ImageView view = (ImageView) findViewById(R.layout.main);
+        // ImageView view = (ImageView) findViewById(R.layout.main);
         setContentView(R.layout.main);
         // view.setOnTouchListener(this);
         CONTEXT = this;
@@ -123,11 +128,10 @@ implements Runnable, OnTouchListener, AccelerometerListener {
                
                break;
             case MotionEvent.ACTION_UP:
-
                break;
                
             case MotionEvent.ACTION_MOVE:
-
+        		timmerDecay = DELAYTIME;
                break;
             }
             return true; // indicate event was handled
@@ -200,11 +204,6 @@ implements Runnable, OnTouchListener, AccelerometerListener {
     		if (newSquare == oldSquare)
     		{
     			if (level[oldSquare] < 3) level[oldSquare]++;
-    			else 
-    				{
-    				level[oldSquare] = 0;
-    	    		b.setSelected(false);
-    				}
                 osccon.send("/activity", oldSquare, level[oldSquare]);
     		}
     		else
@@ -213,13 +212,10 @@ implements Runnable, OnTouchListener, AccelerometerListener {
                 osccon.send("/activity", newSquare, level[newSquare]);
     		}
 
-    		if (level[newSquare] == 0)
-    			{
-    			b.setAlpha(255);
-    			}
-    		else b.setAlpha(80*level[newSquare]);
+    		if (level[oldSquare] == 0) b.setAlpha(255);
+    		b.setAlpha(80*level[newSquare]);
     		lastButton = b;
-    		timmerDecay = 4;
+    		timmerDecay = DELAYTIME;
     	}  // End of onTap()
     	
     	

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="hello">Hello World, soundSpace!</string>
-    <string name="app_name">soundSpace</string>
+    <string name="app_name">- sound S p a c e -</string>
     <string name="help">Help You?  6</string>
     <string name="clear">Clearing History</string>
 </resources>
